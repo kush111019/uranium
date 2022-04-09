@@ -61,9 +61,61 @@ router.post('/test-post2', function (req, res) {
 });
 
 
-const randomController= require("../controllers/randomController.js")
+let Name=[
+    {
+        "name": "manish",
+        "dob": "1/1/1995",
+        "gender": "male",
+        "city": "jalandhar",
+        "sports": [
+            "swimming"
+        ]
+    },
+    {
+        "name": "gopal",
+        "dob": "1/09/1995",
+        "gender": "male",
+        "city": "delhi",
+        "sports": [
+               "soccer"
+           ]
+    },
+    {
+        "name": "lokesh",
+        "dob": "1/1/1990",
+        "gender": "male",
+        "city": "mumbai",
+        "sports": [
+            "soccer"
+        ]
+    }
+]
+
+router.post('/players',function(req,res){
+ let i=0;
+ let myName=req.body;
+for(i;i<Name.length;i++)
+{
+
+    if(myName.name==Name[i].name)
+    {
+        res.send( {r:"player already exist"} );
+        break;
+    }
+    
+}   
+console.log(i)
+console.log(Name.length)
+if(i==Name.length)
+{
+Name.push(req.body);
+res.send( { data: Name , status: true })
+}
+//res.send(  { data: Name , status: true }  );
+});
+//const randomController= require("../controllers/randomController.js")
 //write a post request to accept an element in post request body and add it to the given array and return the new array
-router.post('/test-post3', randomController.addToArray ); //HANDLER/CONTROLLER
+//router.post('/test-post3', randomController.addToArray ); //HANDLER/CONTROLLER
 
 
 
