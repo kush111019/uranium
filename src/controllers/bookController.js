@@ -7,8 +7,54 @@ const createBook= async function (req, res) {
     let savedData= await BookModel.create(data)
     res.send({msg: savedData})
 }
+const getBookNameAuthorName=async function(req,res){
 
-const getBooksData= async function (req, res) {
+  let books=await BookModel.find().select({ bookName: 1, authorName: 1});
+  res.send({msg:books});
+
+}
+const getBooksByYear=async function(req,res){
+
+  let books=await BookModel.find({year : 2022})
+  res.send({msg:books})
+}
+
+/*const getRandomBooks=async function(req,res){
+
+  let books=await BookModel.find({$or:[{isStockAvailable:true},{totalPages:{$gt:500}}] })
+  res.send({msg:books})
+  
+}*/
+
+ 
+ const getParticularBooks=async function(req,res){
+
+  let a=req.params.abcd;
+  let book=null;
+  if(isNaN(a))
+  {
+    book=await BookModel.find({bookName:a})
+  }
+  else
+  {
+    book=await BookModel.find({bookYear:a.parseInt()})
+
+  }
+  return book;
+
+}
+
+//const getXINRBooks=async function(req,res){
+
+//let book=await BookModel.find({prices:{$in:[{indianPrice:{$in:["100INR","200INR","500INR"]}}]}})
+ //res.send({msg:book});
+//}
+
+
+
+
+
+//const getBooksData= async function (req, res) {
 
     // let allBooks= await BookModel.find( ).count() // COUNT
 
@@ -65,7 +111,7 @@ const getBooksData= async function (req, res) {
     
     // ASYNC AWAIT
     
-    let a= 2+4
+  /*  let a= 2+4
     a= a + 10
     console.log(a)
     let allBooks= await BookModel.find( )  //normally this is an asynchronous call..but await makes it synchronous
@@ -77,9 +123,15 @@ const getBooksData= async function (req, res) {
     let b = 14
     b= b+ 10
     console.log(b)
-    res.send({msg: allBooks})
-}
+    res.send({msg: allBooks})*/
+
 
 
 module.exports.createBook= createBook
-module.exports.getBooksData= getBooksData
+//module.exports.getBookNameAuthorName=getBookNameAuthorName;
+//module.exports.getBooksByYear=getBooksByYear;
+module.exports.getParticularBooks=getParticularBooks;
+//module.exports.getXINRBooks=getXINRBooks;
+
+//module.exports.getBooksData= getBooksData
+//module.exports.getRandomBooks=getRandomBooks;
