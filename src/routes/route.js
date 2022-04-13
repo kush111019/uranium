@@ -16,17 +16,18 @@ router.get("/particularBooks/:abcd",function(req,res){
    res.send({msg:a});
 });
 
-//router.get("/getXINR",BookController.getXINRBooks);
+router.get("/getXINR",BookController.getXINRBooks);
 
 //router.post("/createUser", UserController.createUser  )
 
 //router.get("/getUsersData", UserController.getUsersData)
 
-//router.post("/createBook", BookController.createBook  )
+router.post("/createBook", BookController.createBook)
 
 //router.get("/getBooksData", BookController.getBooksData)
-//router.get('/byBNameAName',BookController.getBookNameAuthorName)
-//router.post('/byYear',BookController.getBooksByYear);
-//router.post('/getRandomBooks',BookController.getRandomBooks);
+router.get('/byBNameAName',BookController.getBookNameAuthorName)
+router.post('/byYear',BookController.getBooksByYear);
+router.post('/getRandomBooks',BookController.getRandomBooks);
+router.get('/getParticularBooks',BookController.getParticularBooks);
 
 module.exports = router;
