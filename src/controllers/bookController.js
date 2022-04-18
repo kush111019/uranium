@@ -56,44 +56,28 @@ const getBooksWithDetails = async function (req, res) {
 
 const updBook=async function (req,res){
 
-let pubid=await PublisherModel.find({$or:[{name:"penguin"},{name:"Harper Collins"}]})
-let j=0;
-let m=0;
-for(let i=0;i<pubid.length;i++)
-{
- 
- if(pubid[i].name=="penguin")
- break;
- j++;
+  let hardCOverPublishers = await PublisherModel.find({name : {$in:['Penguin','HarperCollins'] }}).select({_id:1})
+  let arrayOfPublishers = []
+  
+  for (let i = 0; i < hardCOverPublishers.length; i++) {
+      let objId = hardCOverPublishers[i]._id 
+      arrayOfPublishers.push(objId)
+  }
+  
+  let books = await bookModel.updateMany({publisher: {$in: arrayOfPublishers}},{isHardCover: true})
+
+  res.send({data: books})
+}
+
+const upByPrice=async function(req,res){
+
+
+let authors=await authorModel.find({"rating":{gt:3.5}})
+console.log(authors);
+
+
 
 }
-for(let i=0;i<pubid.length;i++)
-{
-
-if(pubid[i].name=="Harper Collins")
-break;
-m++;
-
-}
-penguinId=pubid[j].name
-harperId=pubid[m].name
-console.log(penguinId)
-console.log(harperId)
-
-  let books1=await bookModel.updateMany(
-
-  {name:penguinId},
- {$set:{isHardCover:true}},
-  {new:true,upsert:true}
-  )
-   let books2=await bookModel.updateMany(
-
-  {name:harperId},
-  {$set:{isHardCover:true}},
-  {new:true,upsert:true}
-  )
-
-   }
 
  const updateByAuthor=async function(req,res){
 
@@ -135,3 +119,4 @@ module.exports.createBook= createBook
 module.exports.getBooksWithDetails = getBooksWithDetails
 module.exports.updBook=updBook;
 module.exports.updateByAuthor=updateByAuthor;
+module.exports.upByPrice=upByPrice;
