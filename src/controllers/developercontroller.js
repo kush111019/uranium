@@ -27,7 +27,7 @@ for(let i=0;i<person.length;i++)
 {
     person1[i]=person[i]._id
 }
- let deve= await developerModel.find({$and:[{percentage:{$gte:per1}},{batch:{$in:person1}}]}).populate("batchcollection")
+ let deve= await developerModel.find({$and:[{percentage:{$gte:per1}},{batch:{$in:person1}}]})
 
 console.log(deve)
 
