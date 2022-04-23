@@ -11,7 +11,8 @@ const createUser = async function (abcd, xyz) {
   let savedData = await userModel.create(data);
   console.log(abcd.newAtribute);
   xyz.status(201).send({ msg: savedData });
-  }catch{
+  }
+  catch{
     console.log("This is the error :", err.message)
     res.status(500).send({ msg: "Error", error: err.message })
 
@@ -45,7 +46,7 @@ const loginUser = async function (req, res) {
     "functionup-thorium"
   );
   res.setHeader("x-auth-token", token);
-  res.status(401).send({ status: true, data: token });
+  res.status(200).send({ status: true, data: token });
   }catch{
 
     console.log("This is the error :", err.message)

@@ -15,6 +15,7 @@ const mid44= function ( req, res, next) {
     let userLoggegIn=decodedToken.userId;
    if(userToGet!=userLoggegIn)
    return res.status(403).send({msg:"unauthorised user"})
+   next();
     }catch{
 
       console.log("This is the error :", err.message)
@@ -34,6 +35,7 @@ const mid45=function(req,res,next){
    let userLoggegIn=decodedToken.userId;
    if(userToBeModified!=userLoggegIn)
    return res.status(403).send({msg:"unauthorised user"})
+   next();
   }catch{
 
     console.log("This is the error :", err.message)
@@ -53,12 +55,13 @@ const mid45=function(req,res,next){
    let userLoggegIn=decodedToken.userId;
    if(userToBeDeleted!=userLoggegIn)
    return res.status(403).send({msg:"unauthorised user"})
+   next();
     }catch{
 
       console.log("This is the error :", err.message)
       res.status(500).send({ msg: "Error", error: err.message })
     }
-
+  
   }
 module.exports.mid44= mid44
 module.exports.mid45= mid45
