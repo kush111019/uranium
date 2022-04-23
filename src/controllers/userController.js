@@ -169,30 +169,50 @@ let upda=await userModel.findByIdAndUpdate(userId,{isDeleted:true},function(err,
 }
 
 }
+
+const postMessage = async function (req, res) {
+  try{
+  let message = req.body.message
+  console.log(req.body)
+  console.log(message)
+  // Check if the token is present
+  // Check if the token present is a valid token
+  // Return a different error message in both these cases
+  let token = req.headers["x-auth-token"]
+  if(!token) return res.status(401).send({status: false, msg: "token must be present in the request header"})
+  let decodedToken = jwt.verify(token, 'functionup-thorium')
+
+  if(!decodedToken) return res.status(401).send({status: false, msg:"token is not valid"})
+  
+  //userId for which the request is made. In this case message to be posted.
+  let userToBeModified = req.params.userId
+  //userId for the logged-in user
+  let userLoggedIn = decodedToken.userId
+
+  //userId comparision to check if the logged-in user is requesting for their own data
+  if(userToBeModified != userLoggedIn) return res.status(403).send({status: false, msg: 'User logged is not allowed to modify the requested users data'})
+
+  let user = await userModel.findById(req.params.userId)
+  if(!user) return res.status(400).send({status: false, msg: 'No such user exists'})
+  
+  let updatedPosts = user.posts
+  //add the message to user's posts
+  updatedPosts.push(message)
+  let updatedUser = await userModel.findOneAndUpdate({_id: user._id},{posts: updatedPosts}, {new: true})
+
+  //return the updated user document
+  return res.status(201).send({status: true, data: updatedUser})
+  }catch{
+    console.log("This is the error :", err.message)
+  res.status(500).send({ msg: "Error", error: err.message })
+
+  }
+}
+
 module.exports.createUser = createUser;
 module.exports.getUserData = getUserData;
 module.exports.updateUser = updateUser;
 module.exports.loginUser = loginUser;
 module.exports.deleteMe=deleteMe
+module.exports.postMessage=postMessage;
 
-
-// / 2xx- Success // 4xx- something gone wrong..and problem is on user side(client side) // 5xx- server side problems
-
-// // "BAD REQUEST" ...400..say if username password dont match etc..or anything generic( any problem in input on user side or any other unhandled problem) // "RESOURCE NOT FOUND"...404 //404 page not found...eg. find ("asaijndianud89")...let book =bookModel.findOne({_id:"asaijndianud89"}) if (book){..} else res.status(404).send({}) // "AUTHENTICATION MISSING"...401..login is required...if(token){...} else { res.status(401)} // "NOT AUTHENTICATED OR FORBIDDEN"..403 // if ( token.userId === userId) {...} else {res.status(403).send({}) } // -- try catch ....// "SERVER ERROR"...500
-
-// // -- ALL GOOD... //status(200)- OK // --- "ALL GOOD and A NEW RESOURCE WAS SUCCEFULLY CREATED" ...status(201)..e.g a new user registers herself successfully
-// const createBook = async function (req, res) {
-//   try {
-//       let data = req.body
-//       console.log(data)
-//       if ( Object.keys(data).length != 0) {
-//           let savedData = await BookModel.create(data)
-//           res.status(201).send({ msg: savedData })
-//       }
-//       else res.status(400).send({ msg: "BAD REQUEST"})
-//   }
-//   catch (err) {
-//       console.log("This is the error :", err.message)
-//       res.status(500).send({ msg: "Error", error: err.message })
-//   }
-// }
